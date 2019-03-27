@@ -1,27 +1,65 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
+import React, {Component} from 'react';
 import './App.css';
 
+import CardEditor from './components/CardEditor';
+import CardViewer from './components/CardViewer';
+
+
+
 class App extends Component {
+  constructor() {
+    super();
+    this.state = {
+      editor: true,
+      cards: [
+        {
+          front: '1 + 5',
+          back: ' 6 '
+        }, {
+          front: '2 -9',
+          back: '-7'
+        }
+      ]
+    };
+  }
+
   render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
-    );
+    if (this.state.editor) {
+      return <CardEditor
+        deleteCard={this.deleteCard}
+        addCard={this.addCard}
+        cards={this.state.cards}
+        switchMode={this.switchMode}/>
+    } else {
+      return <CardViewer cards={this.state.cards} switchMode={this.switchMode}/>
+    }
+  }
+
+  switchMode = () => {
+    this.setState(state => ({
+      editor: !state.editor
+    }))
+  }
+
+  addCard = (front, back) => {
+    console.log(front, back)
+    this.setState((state) => ({
+      cards: [
+        ...state.cards, {
+          front,
+          back
+        }
+      ]
+    }))
+
+  }
+
+  deleteCard = (index) => {
+    this.setState(state => {
+      const cards = [...state.cards]
+      cards.splice(index, 1)
+      return {cards: cards}
+    })
   }
 }
 
